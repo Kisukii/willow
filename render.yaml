@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: willow
+    runtime: docker
+    plan: free
+    region: singapore
+    healthCheckPath: /health
+    autoDeployTrigger: off
+    envVars:
+      - key: ADMIN_TOKEN
+        generateValue: true
+      - key: DATABASE_PATH
+        value: /data/infrawatch.db
+      - key: CHECK_INTERVAL
+        value: "15"
+      - key: DEMO_ENABLED
+        value: "true"

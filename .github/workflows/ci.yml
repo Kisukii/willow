@@ -1,0 +1,46 @@
+name: Validate and build
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest -q
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node --check app/static/app.js
+  container:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t willow:ci .
+      - name: Verify container health
+        run: |
+          docker run -d --name monitor -p 8000:8000 willow:ci
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://localhost:8000/health; then exit 0; fi
+            sleep 2
+          done
+          docker logs monitor
+          exit 1
+  deploy:
+    needs: container
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && vars.DEPLOY_ENABLED == 'true'
+    environment: production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger configured Render deployment
+        env:
+          DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: |
+          test -n "$DEPLOY_HOOK" || { echo 'Configure RENDER_DEPLOY_HOOK'; exit 1; }
+          curl --fail --silent --show-error --output /dev/null --request POST "$DEPLOY_HOOK"
