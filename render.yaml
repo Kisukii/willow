@@ -5,7 +5,7 @@ services:
     plan: free
     region: singapore
     healthCheckPath: /health
-    autoDeployTrigger: off
+    autoDeployTrigger: checksPass
     envVars:
       - key: ADMIN_TOKEN
         generateValue: true
