@@ -1,5 +1,7 @@
 # Willow
 
+[Live dashboard](https://willow-42d3.onrender.com) · [CI validation](https://github.com/Kisukii/willow/actions/runs/40348850368)
+
 A small infrastructure health dashboard with a soft parchment, sage and wine-red interface. Built with Python, FastAPI, SQLite and plain JavaScript.
 
 ## Features
@@ -86,13 +88,13 @@ python -m pytest -q
 node --check app/static/app.js
 ```
 
-Local validation on October 26, 2026: 11 tests passed; JavaScript syntax passed; real HTTP failure and recovery were exercised. Tests cover auth, disabled controls, classification, HTTP/network errors, history persistence and demo transitions. Browser visual QA and Docker execution have not been completed on the development machine because browser automation was blocked and Docker was unavailable.
+Local validation on October 26, 2026: 11 tests passed; JavaScript syntax passed; real HTTP failure and recovery were exercised. Tests cover auth, disabled controls, classification, HTTP/network errors, history persistence and demo transitions. Docker build and container health smoke test also passed in GitHub Actions. Public HTTPS homepage and /health returned 200; the hosted dashboard API returned measured samples. Browser visual QA remains incomplete because browser automation was blocked.
 
-GitHub Actions runs tests, checks JavaScript, then builds and smoke-tests the container. The Render Blueprint deploys updates only after CI checks pass. Initial deployment still requires a Render account and repository connection. An optional hook job is disabled unless DEPLOY_ENABLED=true and RENDER_DEPLOY_HOOK is configured; do not enable it alongside Render auto-deploys.
+GitHub Actions runs tests, checks JavaScript, then builds and smoke-tests the container. The supplied Render Blueprint deploys updates only after CI checks pass. The current service was created through the Render integration with automatic deployment disabled; deploy future updates manually after CI passes. Initial deployment still requires a Render account and repository connection. An optional hook job is disabled unless DEPLOY_ENABLED=true and RENDER_DEPLOY_HOOK is configured; do not enable it alongside Render auto-deploys.
 
 ## Public deployment
 
-See [deployment guide](docs/DEPLOYMENT.md). No live deployment URL is claimed until hosting succeeds.
+See [deployment guide](docs/DEPLOYMENT.md). The live dashboard is https://willow-42d3.onrender.com.
 
 ## Security and limitations
 
@@ -101,7 +103,7 @@ See [deployment guide](docs/DEPLOYMENT.md). No live deployment URL is claimed un
 - CPU is process CPU normalized to logical host cores; it is not a container quota or cloud utilization measurement. The first CPU sample may be zero.
 - History is bounded and chart windows contain actual observed samples, not uptime guarantees. State comparisons reset on process restart; persisted events remain.
 - Free hosting is an internship demo, not a production alerting or always-on monitoring service. No notifications, billing integration or remote container metrics are implemented.
-- Deployment and CI files are provided; GitHub execution and Docker build results must be checked after publication.
+- Deployment and CI files are provided; GitHub tests, Docker build and container smoke test passed on October 26, 2026.
 
 ## Screenshots
 

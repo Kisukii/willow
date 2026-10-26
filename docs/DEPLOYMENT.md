@@ -33,3 +33,15 @@ Free web services spin down after 15 minutes without incoming traffic. The first
 ## Verification record
 
 Local: 11 tests passed, JavaScript syntax checked, HTTP self-probes and injected 503/recovery verified. Docker image, GitHub CI and public hosting require their actual remote execution before they can be marked verified.
+
+## Current published instance
+
+Live URL: https://willow-42d3.onrender.com
+Repository: https://github.com/Kisukii/willow
+Service dashboard: https://dashboard.render.com/web/srv-dbfn113rjlhs73eoc3g0
+
+Created on the Free Docker plan in Singapore through the Render integration. Automatic deploys are off on this instance: after pushing updates, wait for GitHub CI to pass, then use Manual Deploy in Render. The supplied Blueprint is a separate reproducible setup with checksPass enabled; its configuration is not automatically applied to an API-created service. The current service uses Render's default readiness behavior plus the Docker health check.
+
+The operator token was configured privately in Render environment variables. Retrieve it there if you want to demonstrate incident injection; never commit it or include it in the submission link.
+
+Verified October 26, 2026: GitHub Actions tests, JavaScript syntax, Docker build and container HTTP health check passed. The public homepage and /health returned HTTP 200, and the dashboard API returned actual monitoring samples.
